@@ -27,8 +27,9 @@ add_queue_permission <- function(queue, label, principal, action, query = NULL, 
         }
     }
     v <- c("*", "SendMessage", "ReceiveMessage", "DeleteMessage", "ChangeMessageVisibility", "GetQueueAttributes", "GetQueueUrl")
-    if (!any(action) %in% v) {
-        stop("Unrecogized 'action':", paste0(action[!action %in% v], collapse = ", "))
+    unknown_actions <- setdiff(action, v)
+    if (length(unknown_actions) != 0) {
+        stop("Unrecogized 'action':", paste0(unknown_actions, collapse = ", "))
     }
     a <- paste0("ActionName.", seq_along(action))
     b <- paste0("AWSAccountId.", seq_along(principal))
